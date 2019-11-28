@@ -20,8 +20,11 @@ def allowed_file(filename):
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
+        # 获取传输的base64格式数据
         img_base64 = request.form.get('imageData')
+        # 将base64格式数据转换为jpg图片
         img_jpg = base64.b64decode(img_base64)
+        # 将图片以接收时间命名并保存
         now = time.strftime("%Y-%m-%d-%H_%M_%S",time.localtime(time.time())) 
         filename = now + '.jpg'
         filename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -29,6 +32,7 @@ def upload_file():
         file.write(img_jpg)
         file.close()
 
+        # 返回json数据
         pred_boxes, pred_class, pred_score = model.prediction(filename, 0.8)
         dict = {}
         dict['data'] = []
