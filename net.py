@@ -6,6 +6,13 @@ from torchvision import transforms
 from PIL import Image
 import cv2
 
+class Letter:
+    
+    def __init__(self, boxesn, classn, scoren):
+        self.boxesn = boxesn
+        self.classn = classn
+        self.scoren = scoren
+
 
 class Model:
     CLASS_NAMES = ['__background__', 'A', 'B', 'C', 'D', 'X']
@@ -38,3 +45,24 @@ class Model:
         for i in range(len(pred_score)):
             pred_score[i] = int(pred_score[i] * 100)
         return pred_boxes, pred_class, pred_score
+
+    def getAns(self, img, threshold):
+
+        pred_boxes, pred_class, pred_score =  self.prediction(img, threshold)
+        letters = []
+        for i in range(len(pred_boxes)):
+            if pred_class[i] != 'X':
+                letter = Letter(pred_boxes[i], pred_class[i], pred_score[i])
+                letters.append(letter)
+                
+        letters.sort(key=lambda x: x.boxesn[0] + 2000 * x.boxesn[1])
+        new_letters = []
+        for i in range(0, len(letters), 5):
+            items = letters[i:i+5]
+            items.sort(key=lambda x: x.boxesn[0])
+            for j in range(len(items)):
+                new_letters.append(items[j])
+        return new_letters
+        
+
+        
