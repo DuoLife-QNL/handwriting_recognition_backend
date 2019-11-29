@@ -22,8 +22,15 @@ def upload_file():
     if request.method == 'POST':
         # 获取传输的base64格式数据
         img_base64 = request.form.get('imageData')
+
+        # print(img_base64)
+        img_base64 = img_base64.split(',')[1]
         # 将base64格式数据转换为jpg图片
-        img_base64 = img_base64.split(b',')[1]
+        # str_img_base64 = base64.b64decode
+        # str_img_base64 = img_base64.decode('ascii')
+        # str_img_base64 = str_img_base64.split(b',')[1]
+        # img_base64 = str_img_base64.encode('ascii')
+        # img_base64 = str_img_base64.encode()
         img_jpg = base64.b64decode(img_base64)
         # 将图片以接收时间命名并保存
         now = time.strftime("%Y-%m-%d-%H_%M_%S",time.localtime(time.time())) 
