@@ -28,7 +28,7 @@ class Model:
     def prediction(self, img, threshold):
         # img = Image.open(img)
         img = cv2.imread(img)
-        img[img > 100] = 255
+        img[img > 120] = 255
         img = 255 - img
         img = Image.fromarray(img.astype('uint8')).convert('RGB')
         transform = transforms.Compose([transforms.ToTensor()])
