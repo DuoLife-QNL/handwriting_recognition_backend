@@ -47,8 +47,9 @@ def upload_img():
         letters = model.getAns(filename, 0.5)
         dict = {}
         dict['letters'] = []
-        for item in letters:
+        for (index, item) in  enumerate(letters):
             letter = {
+                'no': index + 1,
                 'class': item.classn,
                 'box': item.boxesn,
                 'score': item.scoren
