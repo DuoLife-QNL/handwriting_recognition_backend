@@ -58,7 +58,7 @@ def upload_img():
         if (len(letters) == 40):
             dict['valid'] = True
         else:
-            dict['valid'] = False
+            dict['valid'] = False   
         return jsonify(dict)
 
 @app.route('/upload/key', methods = ['POST'])

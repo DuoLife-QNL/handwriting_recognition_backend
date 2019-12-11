@@ -13,7 +13,6 @@ class Letter:
         self.classn = classn
         self.scoren = scoren
 
-
 class Model:
     CLASS_NAMES = ['__background__', 'A', 'B', 'C', 'D', 'X']
     model = torchvision.models.detection.fasterrcnn_resnet50_fpn()
@@ -22,14 +21,15 @@ class Model:
     model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     model.to(device)
-    model.load_state_dict(torch.load('model.pth'))
+    model.load_state_dict(torch.load('model-use.pth'))
     model.eval()
 
     def prediction(self, img, threshold):
         # img = Image.open(img)
         img = cv2.imread(img)
-        img[img > 120] = 255
+        img[img > 180] = 255
         img = 255 - img
+        img[img > 100] = 255
         img = Image.fromarray(img.astype('uint8')).convert('RGB')
         transform = transforms.Compose([transforms.ToTensor()])
         img = transform(img)
@@ -57,11 +57,22 @@ class Model:
                 
         letters.sort(key=lambda x: x.boxesn[0] + 2000 * x.boxesn[1])
         new_letters = []
-        for i in range(0, len(letters), 5):
-            items = letters[i:i+5]
+        i = 0
+        j = 0
+        while i < len(letters):
+            while  j < len(letters) and (letters[j].boxesn[1] - letters[i].boxesn[1]) < (letters[i].boxesn[3] - letters[i].boxesn[1]):
+                j = j + 1
+            items = letters[i:j]
             items.sort(key=lambda x: x.boxesn[0])
-            for j in range(len(items)):
-                new_letters.append(items[j])
+            for k in range(len(items)):
+                new_letters.append(items[k])
+            i = j
+
+        # for i in range(0, len(letters), 5):
+        #     items = letters[i:i+5]
+        #     items.sort(key=lambda x: x.boxesn[0])
+        #     for j in range(len(items)):
+        #         new_letters.append(items[j])
         return new_letters
         
 
