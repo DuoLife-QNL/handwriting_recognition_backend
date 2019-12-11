@@ -108,6 +108,7 @@ venv.bak/
 
 # picture
 storage/*.jpg
+storage/*.tar.gz
 
 # model
-model.pth
+*.pth
